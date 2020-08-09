@@ -4,14 +4,13 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
 
 function NavBar() {
     const [query, setQuery] = useState('');
     const { setActive, setQueryTerm } = useContext(AppContext);
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
         if (query) {
             setActive(false);
         } else {
@@ -20,8 +19,8 @@ function NavBar() {
         setQueryTerm(query);
     }
 
-    function handleChange(e) {
-        setQuery(e.target.value);
+    function handleChange(event) {
+        setQuery(event.target.value);
     }
 
     return (
@@ -30,9 +29,8 @@ function NavBar() {
             <Nav className="mr-auto">
                 {/* insert Nav Links here */}
             </Nav>
-            <Form inline={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
                 <FormControl type="text" placeholder="Catch 'em all " className="mr-sm-2"  onChange={handleChange} value={query}/>
-                <Button variant="outline-info">Search</Button>
             </Form>
         </Navbar>
     )

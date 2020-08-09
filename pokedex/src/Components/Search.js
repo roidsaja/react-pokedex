@@ -3,8 +3,8 @@ import PokemonCard from './PokemonCard';
 import {AppContext} from '../AppContext';
 
 function Search(){
-    const {query} = useContext(AppContext);
-    const name = query.toLowerCase();
+    const {queryTerm} = useContext(AppContext);
+    const name = queryTerm.toLowerCase();
     const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
     return <PokemonCard name={name} url={url} />;
 }

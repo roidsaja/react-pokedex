@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 
 function PokemonCard({ name, url }) {
@@ -11,6 +9,7 @@ function PokemonCard({ name, url }) {
     const [height, setHeight] = useState('');
     const [stats, setStats] = useState([]);
     const [types, setTypes] = useState([]);
+    const [errorcheck, setErrorCheck] = useState(false);
     let typesList = [];
 
     useEffect(() => {
@@ -30,34 +29,43 @@ function PokemonCard({ name, url }) {
             })
             .catch((error) => {
                 console.log(error);
+                setErrorCheck(true);
             })
     }, [url]);
 
     return (
         <>
-            {/* <div>
-                <Card className="text-center" bg="dark" text='white'>
-                    <Card.Img variant="top" src={img} style={{ width: '17rem', margin: 'auto' }} alt='Pokemon' />
-                    <Card.text> {types.map((typeName, index) => (
-                        <h5 key={index} style={{ margin: '10px' }}>{typeName}</h5>
-                    ))}
-                    </Card.text>
-                    <Card.text>{name}</Card.text>
-                    <Card.Img variant="top" src={backimg} style={{ width: '17rem', margin: 'auto' }} alt='Pokemon' />
-                    <Card.text>Weight: {weight}</Card.text>
-                    <Card.text>Height: {height}</Card.text>
-                    <Card.text> {stats.map((stat, index) => (
-                        <p key={index} style={{ margin: '10px' }}>{stat.stat.name} : {stat.base_stat}{' '} <span style={{ fontSize: '20px' }}>|</span></p>
-                    ))}
-                    </Card.text>
-                    <Card.text>{name}</Card.text>
-                </Card>
-            </div> */}
-            <Card className="text-center" bg="dark" text="white">
-                <Card.Img variant="top" src={img} alt='Pokemon' style={{width:"17rem", margin:"auto"}} />
-            </Card>
+            <div>
+                {errorcheck ?
+                    (
+                        <Card className="text-center" bg="dark" text="white">
+                            <Card.Text>Can't Find Pokemon :(</Card.Text>
+                        </Card>
+                    ) : (
+                        <Card className="text-center" bg="dark" text="white" style={{ width: "18rem" }}>
+                            <Card.Header>{name.toUpperCase()}</Card.Header>
+                            <Card.Body>
+                                <span>
+                                    <Card.Img variant="top" src={img} alt={name} style={{ width: "12rem", margin: "auto" }} />
+                                    <Card.Img variant="top" src={backimg} alt={name} style={{ width: "12rem", margin: "auto" }} />
+                                </span>
+                                {types.map((typeName, index) => (
+                                    <Card.Text key={index} style={{ margin: '10px' }}>{typeName}</Card.Text>
+                                ))}
+                                <Card.Text>Height: {height}</Card.Text>
+                                <Card.Text>Weight: {weight}</Card.Text>
+                                {stats.map((stat, index) => (
+                                    <Card.Text key={index} style={{ margin: '10px' }}>{stat.stat.name}: {stat.base_stat}</Card.Text>
+                                ))}
+                            </Card.Body>
+                        </Card>
+                    )
+                }
+            </div>
         </>
     )
 }
 
+// React.memo() is a higher order function, here it is wrapping around the function PokemonCard
+// It will export and create a version that only renders upon any changes to the prop {name, url} and useStates
 export default React.memo(PokemonCard);

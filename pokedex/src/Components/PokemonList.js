@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Pagination from './Pagination';
+import CardDeck from 'react-bootstrap/CardDeck';
 import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 import PokemonCard from './PokemonCard';
 
 function PokemonList() {
@@ -43,19 +45,28 @@ function PokemonList() {
         setPageNum((prevState) => prevState - 1);
     }
 
-    if (loading) return 'loading page...';
+    if (loading) return (
+        <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+        </Spinner>
+    );
 
     return (
         <>
-        <div>
-            {pokemonList.map((pokemon, index) => {
-                let name = pokemon.name;
-                return <PokemonCard key={index} name={name} url={pokemon.url} />;
-            })}
             <Pagination prevPage={prevPage ? PrevPage : null} nextPage={nextPage ? NextPage : null} />
-        </div>
+            <Container fluid="sm">
+                <CardDeck>
+                    {pokemonList.map((pokemon, index) => {
+                        let name = pokemon.name;
+                        return <PokemonCard key={index} name={name} url={pokemon.url} />;
+                    })}
+                </CardDeck>
+            </Container>
+            <Pagination prevPage={prevPage ? PrevPage : null} nextPage={nextPage ? NextPage : null} />
         </>
     );
 }
 
+// React.memo() is a higher order function, here it is wrapping around the function PokemonList
+// It will export and create a version that only renders upon any changes to PokemonList useStates
 export default React.memo(PokemonList);
